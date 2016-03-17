@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta charset="utf-8">
+
+<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		
+<title>健业宝核销助手</title>
+<link href="css/add_css.css" rel="stylesheet" type="text/css">
+	<link href="css/mui.min.css" rel="stylesheet" type="text/css">
+</head>
+<body>
+		<div class="box">
+		  <div class="login_top"><img src="img/logo_main.png" width="451" height="72"></div>
+		  <form id='login-form' >
+				  <div class="l_box">
+				    <input type="text" class="l_txt" id="account" value="" placeholder="核销员账户名"   >
+				  </div>
+				  <div class="l_box">
+				    <input type="password" class="l_txt" id="password" value=""  style="background-image:url(img/icon_b.png)" placeholder="密码">
+				  </div>
+				  
+		  </form>
+		  
+		  <form class="mui-input-group">
+				<ul class="mui-table-view mui-table-view-chevron">
+					<li class="mui-table-view-cell">
+						记住密码
+						<div id="autoLogin" class="mui-switch">
+							<div class="mui-switch-handle"></div>
+						</div>
+					</li>
+				</ul>
+			</form>
+			<div class="btn_1"><a id="login" >登入</a></div>
+		</div>
+		<script src="js/mui.min.js"></script>
+		<script src="js/mui.enterfocus.js"></script>
+		<script src="js/app.js"></script>
+		<script>
+			(function($, doc) {
+				$.plusReady(function() {
+					plus.screen.lockOrientation("portrait-primary");
+					var settings = app.getSettings();
+					var state = app.getState();
+					var mainPage = $.preload({
+						"id": 'main',
+						"url": 'index.html'
+					});
+					//检查 "登录状态/锁屏状态" 结束
+					var loginButton = doc.getElementById('login');
+					var accountBox = doc.getElementById('account');
+					var passwordBox = doc.getElementById('password');
+					
+					if (settings.autoLogin && state.token && settings.gestures) {
+						accountBox.value=state.account;
+						passwordBox.value=state.password;
+					}
+					var toMain = function() {
+						$.openWindow({
+							url: 'index.html',
+							id: 'login',
+							show: {
+								aniShow: 'pop-in'
+							},
+							styles: {
+								popGesture: 'hide'
+							},
+							waiting: {
+								autoShow: true,
+								title: '登录中...',
+								
+								
+							}
+						});
+						
+					};
+					
+					// close splash
+					setTimeout(function() {
+						//关闭 splash
+						plus.navigator.closeSplashscreen();
+					}, 600);
+					
+					
+					var autoLoginButton = doc.getElementById("autoLogin");
+					
+					autoLoginButton.classList[settings.autoLogin ? 'add' : 'remove']('mui-active')
+					autoLoginButton.addEventListener('toggle', function(event) {
+						
+						setTimeout(function() {
+							var isActive = event.detail.isActive;
+							settings.autoLogin = isActive;
+							app.setSettings(settings);
+						}, 50);
+					}, false);
+					
+					
+
+					loginButton.addEventListener('tap', function(event) {
+						var loginInfo = {
+							account: accountBox.value,
+							password: passwordBox.value
+						};
+						app.login(loginInfo, function(err) {
+							if (err) {
+								plus.nativeUI.toast(err);
+								return;
+							}
+							
+							toMain();
+						});
+					});
+					
+					var backButtonPress = 0;
+					$.back = function(event) {
+						backButtonPress++;
+						if (backButtonPress > 1) {
+							plus.runtime.quit();
+						} else {
+							plus.nativeUI.toast('再按一次退出应用');
+						}
+						setTimeout(function() {
+							backButtonPress = 0;
+						}, 1000);
+						return false;
+					};
+				});
+			}(mui, document));
+		</script>
+</body>
+</html>

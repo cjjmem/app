@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>列表</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+		<link rel="stylesheet" href="css/mui.min.css">
+		<link rel="stylesheet" href="css/add_css.css">
+	</head>
+
+	<body>
+		<!--下拉刷新容器-->
+		<div id="pullrefresh" class="mui-content mui-scroll-wrapper">
+			<div class="mui-scroll">
+				<!--数据列表-->
+				<div class="mui-table-view mui-table-view-chevron">
+					<!--获取数据--->
+
+					<!--获取数据--->
+				</div>
+			</div>
+		</div>
+		<input type="hidden" id='uptime' value="0" />
+		<input type="hidden" id='total' value="0" />
+		<input type="hidden" id='time' value="0" />
+		<input type="hidden" id='current' value="0" />
+		
+		<script src="js/mui.min.js"></script>
+		<script src="js/app.js"></script>
+		<script>
+			mui.init({
+				pullRefresh: {
+					container: '#pullrefresh',
+					down: {
+						callback: pulldownRefresh
+					},
+					up: {
+						contentrefresh: '正在加载...',
+						callback: pullupRefresh
+					}
+				}
+			});
+			
+			/**
+			 * 时间戳转为日期
+			 */
+			function getLocalTime(time){
+				 return new Date(parseInt(nS) * 1000).toLocaleString().replace(/:\d{1,2}$/,' ');     
+			};
+			
+			/**
+			 * 下拉刷新具体业务实现
+			 */
+			function pulldownRefresh() {
+					//时间戳转为日期
+					var getLocalTime = function(nS){
+						 return new Date(parseInt(nS) * 1000).toLocaleString().replace(/:\d{1,2}$/,' ');     
+					};
+					var state = app.getState();
+				    var uptime = document.getElementById('uptime').value;
+				    if(uptime==0){
+				       mui('#pullrefresh').pullRefresh().endPulldownToRefresh(); //refresh completed
+				       return;
+				    }
+
+					data = {username:state.account,password:state.password,current:1,time:uptime,act:'up'};
+					mui.ajax('http://app.jianyebao.com/api/verification.php?action=codelist',{
+						data:data,
+						dataType:'json',//服务器返回json格式数据
+						type:'post',//HTTP请求类型
+						timeout:10000,//超时时间设置为10秒；
+						success:function(data){
+							if(data.length>0){
+								plus.nativeUI.toast('正在刷新数据');
+								setTimeout(function() {
+									var table = document.body.querySelector('.mui-table-view');
+									for (var i = 0; i <=data.length; i++) {
+										//获取第一条数据,且赋值时间，数据总数,
+										if(i==data.length){
+											document.getElementById('uptime').value = data[0].createtime;
+										}
+										var li = document.createElement('div');
+										li.innerHTML = "<div class='re_cp'><div class='re_cp_l'><img src='"+data[i].imgurl+"' ></div><div class='re_cp_r'><div class='r2'  >"+data[i].title+"</div><p>"+data[i].code+"</p><p class='r1'>核销时间："+data[i].time +" </p><p class='r1'>核销员："+data[i].verifi_name+"</p></div></div>";
+																				
+										//下拉刷新，新纪录插到最前面；
+										table.insertBefore(li, table.firstChild);
+										mui('#pullrefresh').pullRefresh().endPulldownToRefresh();
+									}
+									//mui('#pullrefresh').pullRefresh().endPulldownToRefresh(); //refresh completed
+								}, 1500);
+							}else{
+								plus.nativeUI.toast('已是最新数据');
+								mui('#pullrefresh').pullRefresh().endPulldownToRefresh(); //refresh completed
+							}
+							
+							
+						},
+						error:function(xhr,type,errorThrown){
+
+							plus.nativeUI.toast('网络出现异常,请检查网络');
+						}
+					});
+	
+			}
+			var count = 0;
+			/**
+			 * 上拉加载具体业务实现
+			 */
+			function pullupRefresh() {
+				(function($, doc) {
+					//时间戳转为日期
+					var getLocalTime = function(nS){
+						 return new Date(parseInt(nS) * 1000).toLocaleString().replace(/:\d{1,2}$/,' ');     
+					};
+					
+				  
+					
+					
+					//获取本地存储信息
+					var state = app.getState();
+					var current = document.getElementById('current').value;
+					
+				
+					var uptime = document.getElementById('uptime');
+					var time = document.getElementById('time');
+					var total = document.getElementById('total');
+					
+					//首次传入的值
+					
+					if(current==0){
+						data = {username:state.account,password:state.password,current:current};
+						//alert(now.value);
+					}else{
+						var datatime = document.getElementById('time').value;
+						data = {username:state.account,password:state.password,current:current,time:datatime,act:'more'};
+					}
+					
+					//加载传入的值
+					
+					//访问服务器加载数据
+					mui.ajax('http://app.jianyebao.com/api/verification.php?action=codelist',{
+						data:data,
+						dataType:'json',//服务器返回json格式数据
+						type:'post',//HTTP请求类型
+						timeout:10000,//超时时间设置为10秒；
+						success:function(data){
+						   var num1 =  parseInt(data.length);
+						   var num2 =  parseInt(current);
+						   var num = num1 + num2 ;
+						   if(num1>0)
+						   		plus.nativeUI.toast("正在加载第"+current+"~"+num+"条数据");
+							setTimeout(function() {
+								if(current==0 && total.value==0)
+								   mui('#pullrefresh').pullRefresh().endPullupToRefresh(false); //参数为true代表没有更多数据了。
+								else
+								   mui('#pullrefresh').pullRefresh().endPullupToRefresh((current >= total.value)); //参数为true代表没有更多数据了。
+								var table = document.body.querySelector('.mui-table-view');
+								//var cells = document.body.querySelectorAll('.abc');
+									for (var i = 0; i <=data.length; i++) {
+										//获取第一条数据,且赋值时间，数据总数,
+										if(i==0 && current==0){
+											uptime.value = data[0].createtime;
+											time.value = data[0].createtime;
+											total.value = data[0].total;
+										}
+										++current;
+										var li = document.createElement('div');
+										li.innerHTML = "<div class='re_cp'><div class='re_cp_l'><img src='"+data[i].imgurl+"' ></div><div class='re_cp_r'><div class='r2'  >"+data[i].title+"</div><p>"+data[i].code+"</p><p class='r1'>核销时间："+ data[i].time +" </p><p class='r1'>核销员："+data[i].verifi_name+"</p></div></div>";
+										document.getElementById('current').value=current;
+										table.appendChild(li);
+									}
+								
+							}, 1500);
+							//plus.nativeUI.toast('再按一次退出应用');
+						},
+						error:function(xhr,type,errorThrown){
+							plus.nativeUI.toast('网络出现异常,请检查网络');
+						}
+					});
+				
+					
+				}(mui, document));
+				
+			}
+			if (mui.os.plus) {
+				mui.plusReady(function() {
+					setTimeout(function() {
+						mui('#pullrefresh').pullRefresh().pullupLoading();
+					}, 1000);
+
+				});
+			} else {
+				mui.ready(function() {
+					mui('#pullrefresh').pullRefresh().pullupLoading();
+				});
+			}
+		</script>
+
+	</body>
+
+</html>

@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta charset="utf-8">
+<meta name="viewport"  content="width=device-width,user-scalable=no">
+<title>健业宝核销助手</title>
+<link href="css/add_css.css" rel="stylesheet" type="text/css">
+<link href="css/mui.min.css" rel="stylesheet" type="text/css">
+</head>
+<body>
+<div class="index_top"><img src="img/lc-1.png" width="545" height="94"></div>
+<div class="box1">
+  <div class="wm"> <a onclick="clicked('barcode_scan.html',true,true);"  ><img src="img/2wm.png" width="272" height="152"></a>
+    <p>点击扫描二维码或输入串码</p>
+    <p id='account'></p>
+  </div>
+</div>
+<div class="sm">
+  <div class="sm_l">
+    <input type="text" id="code" class="sm_text" value="输入串码" onFocus="if(value==defaultValue){value='';this.style.color='#000'}" onBlur="if(!value){value=defaultValue;this.style.color='#999'}" style="color:#999999">
+  </div>
+  <div class="sm_r"><a id="search" >搜索</a></div>
+  
+</div>
+
+<div class="btn_2" style="position:relative; bottom: -30px; left: 5%; width: 90%; "><a id="detail">查看核销记录</a></div>
+
+
+		<script src="js/mui.min.js"></script>
+		<script src="js/app.js"></script>
+		<script type="text/javascript" src="js/common.js"></script>
+		<script type="text/javascript">
+			function scaned( t, r, f ) {
+				code = document.getElementById("code");
+				code.value=r;
+				var searchButton = document.getElementById("search");
+				searchButton.addEventListener('tap', function(event) {
+						var state = app.getState();
+					  var Info = {
+					  	code: code.value,
+					  	username:state.account,
+					  	password:state.password,
+					  	token:state.token
+						};
+						//预加载页面
+						var mainPage = $.preload({
+								id:'search',
+								url:'main.html'
+						});
+						//验证
+						app.code(Info, function(res) {
+							
+							if (res==1 || res==2) {
+									//触发详情页面的newsId事件
+										mui.fire(mainPage,'newsId',{id:code.value,type:res});
+										$.openWindow({
+											id: 'search',
+											show: {
+												aniShow: 'pop-in'
+											},
+											waiting: {
+												autoShow: true
+											}
+										});
+							}else {
+								plus.nativeUI.alert(res);
+								return;
+							}
+						});
+					});	
+					mui.trigger(searchButton,'tap');
+			} 
+
+		</script>
+		
+		
+		
+		<script>
+			(function($, doc) {
+				$.init({
+						preloadPages:[{
+						id:'search',
+						url:'main.html'
+						}]
+				});
+
+				var settings = app.getSettings();
+				//用户输入的核销码
+				var code = doc.getElementById('code');
+				//出发show事件
+				window.addEventListener('show', function() {
+					var state = app.getState();
+					account.innerText = state.account;
+				}, false);
+				//触发返回事件
+				window.addEventListener('back', function() {
+						//清空核销码
+						//code.value='输入串码';
+					
+				}, false);
+				
+				$.plusReady(function() {
+					var detailPage = null;
+					
+							detailPage = plus.webview.getWebviewById('search');
+					
+					//设置
+					var searchButton = doc.getElementById('search');
+					//核销记录页面
+					var detailButton = doc.getElementById('detail');
+					detailButton.addEventListener('tap',function(event){
+							$.openWindow({
+								 		url :'Record.html',
+										id: 'detail',
+										show: {
+											aniShow: 'pop-in'
+										},
+										waiting: {
+											autoShow: false
+										}
+									});
+					});
+					
+					//搜索按钮
+					searchButton.addEventListener('tap', function(event) {
+						var state = app.getState();
+						//name = JSON.stringify(state)
+						//alert(name);
+					  
+					  var Info = {
+					  	code: code.value,
+					  	username:state.account,
+					  	password:state.password,
+					  	token:state.token
+						};
+						//预加载页面
+						var mainPage = $.preload({
+								id:'search',
+								url:'main.html'
+						});
+						
+						//验证
+						app.code(Info, function(res) {
+							
+							if (res==1 || res==2) {
+									//触发详情页面的newsId事件
+										mui.fire(mainPage,'newsId',{id:code.value,type:res});
+										$.openWindow({
+											id: 'search',
+											show: {
+												aniShow: 'pop-in'
+											},
+											waiting: {
+												autoShow: true
+											}
+										});
+							}else {
+								plus.nativeUI.alert(res);
+								return;
+							}
+						});
+						
+						
+						
+					});
+					
+					
+					//--
+					$.oldBack = mui.back;
+					var backButtonPress = 0;
+					$.back = function(event) {
+						backButtonPress++;
+						if (backButtonPress > 1) {
+							plus.runtime.quit();
+						} else {
+							plus.nativeUI.toast('再按一次退出应用');
+						}
+						setTimeout(function() {
+							backButtonPress = 0;
+						}, 1000);
+						return false;
+					};
+				});
+			}(mui, document));
+		</script>
+		
+		
+		
+
+</body>
+</html>

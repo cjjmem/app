@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta charset="utf-8">
+<meta name="viewport"  content="width=device-width,user-scalable=no">
+<title>健业宝核销助手</title>
+<link href="css/add_css.css" rel="stylesheet" type="text/css">
+</head>
+<body style="background-color:#FFF">
+<script type="text/javascript">     
+function countDown(secs,surl){     
+ //alert(surl);     
+ var jumpTo = document.getElementById('jumpTo');
+ jumpTo.innerHTML=secs;  
+ if(--secs>0){     
+     setTimeout("countDown("+secs+",'"+surl+"')",1000);     
+     }     
+ else{       
+     location.href=surl;     
+     }     
+ }     
+</script>
+<div class="loading"> <a href="Login.html"><img src="img/logo.png" width="250" height="134"></a>
+  <div class="txt"> <span id="jumpTo">5</span>秒后自动跳转</div>
+<script type="text/javascript">countDown(5,'Login.html');</script> 
+</div>
+</body>
+</html>

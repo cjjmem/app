@@ -1,0 +1,343 @@
+/* css 重置 */
+
+body, dd, dl, dt, form, h1, h2, h3, h4, h5, h6, input, li, p, ul {
+	margin: 0;
+	padding: 0;
+	list-style: none;
+	vertical-align: middle
+}
+img {
+	border: 0;
+	margin: 0;
+	padding: 0
+}
+body {
+	color: #000;
+	-webkit-user-select: none;
+	-webkit-text-size-adjust: none;
+	text-align: left;
+	font-family: "微软雅黑";
+	font-size: 14px;
+	font-style: normal;
+	line-height: 30px;
+	font-variant: normal;
+	background-color: #f3f3f3
+}
+input {
+	transition: all .3s ease-in-out;
+	-webkit-transition: all .3s ease-in-out;
+	-moz-transition: all .3s ease-in-out;
+	border: #35a5e5 1px solid;
+	outline: 0
+}
+input:focus {
+	box-shadow: 0 0 5px rgba(81,203,238,1);
+	-webkit-box-shadow: 0 0 5px rgba(81,203,238,1);
+	-moz-box-shadow: 0 0 5px rgba(81,203,238,1);
+	border: 1px solid #0CF
+}
+.btn a {
+	text-decoration: none;
+	color: #fff;
+	padding: 6px 25px 6px 25px;
+	border-radius: 3px;
+	-webkit-transition: all linear .3s;
+	-moz-transition: all linear .3s;
+	transition: all linear .3s;
+	background-color: rgba(46,172,153,1)
+}
+.btn a:hover {
+	text-decoration: none;
+	background-color: rgba(38,145,129,1)
+}
+.box {
+	max-width: 800px;
+	margin-right: auto;
+	margin-left: auto;
+	padding: 10px
+}
+.box1 {
+	max-width: 800px;
+	margin-right: auto;
+	margin-left: auto
+}
+.login_top {
+	text-align: center;
+	margin-bottom: 40px;
+	margin-top: 20px
+}
+.login_top img {
+	height: auto;
+	width: 80%
+}
+.l_txt {
+	background-image: url(../img/icon_a.png);
+	background-repeat: no-repeat;
+	background-position: 10px center;
+	width: 100%;
+	height: 50px !important;
+	background-color: #FFF;
+	border: 1px solid #F3F3F3 !important;
+	font-family: "微软雅黑" !important;
+	font-size: 16px !important;
+	
+	padding-left: 50px !important;
+}
+.btn_1 {
+	margin-top: 20px
+}
+.btn_1 a {
+	background-color: #37c34b;
+	border-radius: 4px;
+	color: #FFF;
+	height: 50px;
+	display: block;
+	font-size: 18px;
+	line-height: 50px;
+	text-align: center;
+	text-decoration: none
+}
+.btn_1 a:active {
+	color: #FFF;
+	background-color: #02AD1A;
+}
+.btn_2 {
+	margin-top: 20px
+}
+.btn_2 a {
+	background-color: #37c34b;
+	border-radius: 4px;
+	color: #FFF;
+	height: 50px;
+	display: block;
+	font-size: 18px;
+	line-height: 50px;
+	text-align: center;
+	text-decoration: none;
+	margin-right: 10px;
+	margin-left: 10px
+}
+.index_top {
+	background-color: #3e444f;
+	text-align: center;
+	padding-top: 20px;
+	padding-bottom: 10px;
+	max-width: 800px;
+	margin-right: auto;
+	margin-left: auto
+}
+.index_top img {
+	height: auto;
+	width: 95%
+}
+.wm {
+	background-color: #FFF;
+	text-align: center;
+	padding-top: 20px;
+	padding-right: 10px;
+	padding-bottom: 10px;
+	padding-left: 10px
+}
+.sm {
+	max-width: 800px;
+	margin-right: auto;
+	margin-left: auto;
+	overflow: hidden;
+	margin-top: 8px;
+	border-top-width: 1px;
+	border-bottom-width: 1px;
+	border-top-style: solid;
+	border-bottom-style: solid;
+	border-top-color: #E7E7E7;
+	border-bottom-color: #E7E7E7
+}
+.sm_text {
+	background-image: url(../img/icon_d.png);
+	background-repeat: no-repeat;
+	background-position: 10px center;
+	width: 100%;
+	height: 60px !important;;
+	background-color: #FFF;
+	font-family: "微软雅黑" !important;;
+	font-size: 18px !important;
+	text-indent: 60px !important;
+	border: 1px solid #FFF !important;;
+}
+.sm_l {
+	width: 70%;
+	float: left
+}
+.sm_r {
+	float: right;
+	width: 28%
+}
+.sm_r a {
+	display: block;
+	line-height: 60px;
+	width: 100%;
+	background-color: #F3F3F3;
+	text-align: center;
+	background-image: url(../img/icon_c.png);
+	background-repeat: no-repeat;
+	background-position: center center;
+	text-indent: -9999px;
+	float: right
+}
+.h1 {
+	font-size: 24px
+}
+.cp img {
+	height: auto;
+	width: 95%
+}
+.cp_box {
+	border-top-width: 1px;
+	border-bottom-width: 1px;
+	border-top-style: solid;
+	border-bottom-style: solid;
+	border-top-color: #f3f3f3;
+	border-bottom-color: #f3f3f3;
+	background-color: #FFF;
+	margin-top: 8px;
+	line-height: 50px;
+	text-indent: 20px;
+	font-size: 14px
+}
+.cp_li {
+	border-bottom-width: 1px;
+	border-bottom-style: solid;
+	border-bottom-color: #f3f3f3
+}
+.cp_li1 {
+	font-size: 24px;
+	font-family: Arial, Helvetica, sans-serif
+}
+.ok {
+	font-family: "微软雅黑";
+	font-size: 16px;
+	color: #37C34B;
+	margin-left: 20px
+}
+.error {
+	font-family: "微软雅黑";
+	font-size: 16px;
+	color: red;
+	margin-left: 20px
+}
+.co {
+	color: #999;
+	font-size: 16px
+}
+.co1 {
+	color: #999;
+	font-size: 16px;
+	padding-top: 10px;
+	padding-bottom: 30px;
+	text-align: center
+}
+.h3 {
+	font-size: 18px;
+	font-weight: 700
+}
+.h2 {
+	font-size: 14px
+}
+.h2 a {
+	color: #37C34B;
+	text-decoration: underline
+}
+.record_top {
+	background-color: #FFF;
+	text-align: center;
+	padding-top: 20px;
+	padding-bottom: 10px;
+	max-width: 800px;
+	margin-right: auto;
+	margin-left: auto;
+	overflow: hidden;
+	position: relative;
+	font-size: 16px;
+	font-weight: 700;
+	margin-bottom: 8px
+}
+.re_left {
+	float: left;
+	margin-left: 10px;
+	position: absolute;
+	z-index: 1
+}
+.re_left a {
+	display: block;
+	background-image: url(../img/left.png);
+	background-repeat: no-repeat;
+	background-position: left center;
+	color: #37C34B;
+	text-decoration: none;
+	text-indent: 30px;
+	font-size: 16px
+}
+.re_c {
+	float: right;
+	margin-left: 10px;
+	font-size: 18px
+}
+.re_cp {
+	border-top-width: 1px !important;
+	border-bottom-width: 1px !important;
+	border-top-style: solid !important;
+	border-bottom-style: solid !important;
+	border-top-color: #f3f3f3 !important;
+	border-bottom-color: #f3f3f3 !important;
+	background-color: #FFF;
+	margin-top: 1px !important;
+	line-height: 30px;
+	font-size: 16px !important;
+	font-family: "微软雅黑" !important;
+	overflow: hidden;
+	padding: 10px
+}
+.re_cp_l {
+	width: 40%;
+	height: 100%;
+	float: left !important;
+
+}
+.re_cp_l img{
+	width: 90%;
+	display: -webkit-box;
+  	-webkit-box-orient: horizontal;
+  	-webkit-box-pack: center;
+  	-webkit-box-align: center;
+  	
+	display: -moz-box;
+	-moz-box-orient: horizontal;
+	-moz-box-pack: center;
+	-moz-box-align: center;
+	  
+	display: -o-box;
+	-o-box-orient: horizontal;
+	-o-box-pack: center;
+	-o-box-align: center;
+  	
+}
+
+.re_cp_r {
+	width: 58%;
+	float: left !important;;
+	
+}
+.r1 {
+	color: #999;
+}
+.loading {
+	text-align: center;
+	margin-top: 120px
+}
+.txt {
+	font-size: 14px;
+	color: #CCC;
+	margin-top: 30px
+}
+.txt span {
+	color: #31B5A0
+}

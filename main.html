@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta charset="utf-8">
+<meta name="viewport"  content="width=device-width,user-scalable=no">
+<title>健业宝核销助手</title>
+<link href="css/add_css.css" rel="stylesheet" type="text/css">
+<script type="text/javascript" src="js/common.js"></script>
+</head>
+<body>
+<div class="index_top"><img src="img/lc-2.png" width="545" height="94"></div>
+	<div class="box1">
+		<div class="wm"> 
+			<a href="#"></a>
+			<p class="h1" id="datatitle"></p>
+			<!--<p class="cp"><img src="" id="dataimg" width="528" height="180"></p>-->
+		</div>
+
+		<div class="cp_box">
+			<div class="cp_li" >有效期至：<span id="datatime"></span></div>
+				<div class="cp_li1" >
+					<input type='hidden' id='type' value=""  />
+					<input type='hidden' id='code' value=""  />
+					<div id="datacode" style="float: left;"></div>
+					<div class="ok" id="dataok" style="display: none; ">有效</div>
+					<div class="error" id="datafail" style="display: none; ">过期无效</div>
+					<div class="error" id="datauser" style="display: none; ">已使用</div>
+					<div class="error" id="datanouser" style="display: none; ">不可使用</div>
+				</div>
+			</div>
+			<div class="cp_box">
+				<div class="cp_li co">使用限制备注</div>
+				<div class="cp_li" id="dataremark"></div>
+			</div>
+			
+			
+			<div class="btn_2"><a id="sure">确认核销</a></div>
+			
+			<div class="btn_2"><a id="go">返回扫描/搜索</a></div>
+			<div class="co1">确认核销操作不可逆哦！</div>
+		</div>
+	</div>	
+	<script src="js/mui.min.js"></script>
+	<script src="js/app.js"></script>
+		
+	<script>
+		(function($, doc) {
+			$.init();
+			var settings = app.getSettings();
+			//var code = doc.getElementById('suer');
+			
+			window.addEventListener('show', function() {
+				var state = app.getState();
+			}, false);
+			window.addEventListener('newsId',function(event){
+				
+				//显示等待框
+				var w=plus.nativeUI.showWaiting("请等待...\n");
+				var n=1;
+				var t=setInterval(function(){
+					n--;
+					w.setTitle("请等待...\n");
+					if(n<=0){
+						clearInterval(t);
+						w.close();
+					}
+				},1000);
+				
+
+				var state = app.getState();
+				//获得事件参数
+				var codeid = event.detail.id;	
+				
+				var code = document.getElementById('code');
+				var type = document.getElementById('type');
+				code.value=codeid;	
+				
+				var title = document.getElementById('datatitle');
+				//var img = document.getElementById('dataimg');
+				var datacode = document.getElementById('datacode');
+				var time = document.getElementById('datatime');
+				var remark = document.getElementById('dataremark');
+				var ok = document.getElementById('dataok');
+				var fail = document.getElementById('datafail');
+				
+				var datauser = document.getElementById('datauser');
+				var datanouser = document.getElementById('datanouser');
+				//加载数据
+				mui.ajax('http://app.jianyebao.com/api/verification.php?action=codedetail',{
+					data:{code:codeid,username:state.account,password:state.password,token:state.token,type:event.detail.type},
+					dataType:'json',//服务器返回json格式数据
+					type:'post',//HTTP请求类型
+					timeout:10000,//超时时间设置为10秒；
+					success:function(data){
+						if(data.errcode==200){
+							type.value=data.type;
+							datacode.innerText = codeid;
+							title.innerText = data.title;
+							//img.src = data.img;
+							remark.innerText = data.remark;
+							if(data.timetype==0 )
+							  		time.innerText = '永久';
+								else
+									time.innerText = data.time;
+							
+							if(data.status==0){
+								datanouser.style.display="block";
+								/*plus.nativeUI.alert("该核销码不可使用",function(){
+									mui.back();
+								},"核销提醒","返回扫描/搜索");*/
+							}
+							else if(data.status==2){
+								datauser.style.display="block";
+								/*plus.nativeUI.alert("该核销码已使用",function(){
+									mui.back();
+								},"核销提醒","返回扫描/搜索");*/
+							}else{
+
+								if(data.timetype==0 || data.timetype==1 )
+									ok.style.display="block";
+								else
+									fail.style.display='block';	
+							}
+						   		
+						}else{
+							alert(data.errcode);
+							alert(data.errmsg);
+							title.innerText = '失败';
+						}
+						
+					},
+					error:function(xhr,type,errorThrown){
+						plus.nativeUI.toast('网络出现异常,请检查网络');
+						
+					}
+				});
+				
+			},false)		
+			
+			$.plusReady(function() {
+				//预加载页面
+				var mainPage = $.preload({
+						id:'sure',
+						url:'main_ok.html'
+				});
+				//返回扫描搜索
+				var indexPage = $.preload({
+						id:'back',
+						url:'index.html'
+				});
+				
+				
+				
+				//设置
+				var code = document.getElementById('code');
+				var type = document.getElementById('type');
+				var title = document.getElementById('datatitle');
+				var sureButton = doc.getElementById('sure');
+			    var goButton = doc.getElementById('go');
+			    
+			    goButton.addEventListener('tap', function(event){
+			    	mui.fire(indexPage,'back',{id:'1'});
+			    	$.openWindow({
+						url: 'index.html',
+						id: 'go',
+						show: {
+							aniShow: 'pop-in'
+						},
+						styles: {
+							popGesture: 'hide'
+						},
+						waiting: {
+							autoShow: true,
+							title:'加载中...'
+						}
+					});
+			    	
+			    	
+			    });
+			    
+			   
+				sureButton.addEventListener('tap', function(event) {
+					//确认核销..更新数据
+							var state = app.getState();
+							var Info = {
+							  	code: code.value,
+							  	username:state.account,
+							  	password:state.password,
+							  	token:state.token,
+							  	type:type.value
+							};
+							app.updatecode(Info, function(res) {
+								if (res!=200) {
+									
+									
+									
+									plus.nativeUI.toast(res);
+									return;
+								}else{ 
+									
+									//触发详情页面的newsId事件
+									mui.fire(mainPage,'ok',{title:title.textContent});
+									$.openWindow({
+										url: 'main_ok.html',
+										id: 'sure',
+										show: {
+											aniShow: 'pop-in'
+										},
+										styles: {
+											popGesture: 'hide'
+										},
+										waiting: {
+											autoShow: true,
+											title:'加载中...'
+										}
+									});
+								}
+							});
+					
+					//outSet( "弹出系统确认对话框：" );
+					/*var bts=["是","否"];
+					plus.nativeUI.confirm("请确认是否确认核销？",function(e){
+						if(!e.index){
+							
+						}
+						
+					},"核销",bts);*/
+				});
+				//--
+				var backButtonPress = 0;
+				$.back = function(event) {
+					mui.fire(indexPage,'back',{id:'1'});
+					$.openWindow({
+						url: 'index.html',
+						show: {
+							aniShow: 'pop-in'
+						},
+						waiting: {
+							autoShow: false,
+							title:'加载中...'
+						}
+					});
+				};
+
+			});
+		}(mui, document));
+	</script>
+</body>
+</html>
